@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "bannerstop/mention-api-client": "dev-main as 1.0.x-dev",
+        "bannerstop/mention-api-client": "^1.0",
         "symfony/cache": "^5.4 || ^6.4 || ^7.0 || ^8.0",
         "symfony/config": "^5.4 || ^6.4 || ^7.0 || ^8.0",
         "symfony/console": "^5.4 || ^6.4 || ^7.0 || ^8.0",
@@ -49,12 +49,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/bannerstop/mention-api-client",
-            "no-api": true
-        }
-    ]
+    }
 }
