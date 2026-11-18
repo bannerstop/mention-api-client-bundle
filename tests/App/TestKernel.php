@@ -10,11 +10,12 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * A small application with the bundle, whose Symfony HTTP client is answered by FakeMentionApi
- * (service "fake_mention_api").
+ * (service "fake_mention_api"); "app.psr18_client" is a PSR-18 client of the application.
  */
 final class TestKernel extends Kernel
 {
@@ -68,6 +69,7 @@ final class TestKernel extends Kernel
             $container->register('http_client', MockHttpClient::class)
                 ->setArguments([new Reference('fake_mention_api')])
                 ->setPublic(true);
+            $container->register('app.psr18_client', Psr18Client::class)->setArguments([new Reference('http_client')]);
         });
     }
 
@@ -82,7 +84,7 @@ final class TestKernel extends Kernel
         if (self::VERSION_ID >= 70300 && self::VERSION_ID < 80000) {
             return ['property_info' => ['with_constructor_extractor' => true]];
         }
-        if (self::VERSION_ID < 70000) {
+        if (self::VERSION_ID >= 60000 && self::VERSION_ID < 70000) {
             return [
                 'http_method_override' => false,
                 'handle_all_throwables' => true,

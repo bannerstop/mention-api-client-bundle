@@ -87,4 +87,15 @@ final class ClientTest extends MentionApiTestCase
 
         self::assertEqualsWithDelta(30.0, $this->fake()->requests[0]['options']['timeout'], 0.001);
     }
+
+    public function testAnyPsr18ClientServiceCanBeUsed(): void
+    {
+        $container = $this->boot(self::apiKeyConfig(['http_client' => 'app.psr18_client']));
+        $this->fake()->enqueueRows([['id' => 2]]);
+
+        $result = $container->get(MentionApiClient::class)->run('getThings');
+
+        self::assertSame([['id' => 2]], $result->getRows());
+        self::assertSame(['Bearer the-api-key'], $this->fake()->requests[0]['headers']['authorization']);
+    }
 }
