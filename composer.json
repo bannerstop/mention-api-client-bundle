@@ -1,0 +1,53 @@
+{
+    "name": "bannerstop/mention-api-client-bundle",
+    "description": "Symfony integration of bannerstop/mention-api-client: configuration, an autowirable client for the mention-api /v2 interface and the generator for typed wrappers as a console command",
+    "type": "symfony-bundle",
+    "keywords": [
+        "mention",
+        "api-client",
+        "symfony",
+        "bundle",
+        "psr-18",
+        "openapi"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "bannerstop GmbH",
+            "homepage": "https://www.bannerstop.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "bannerstop/mention-api-client": "^1.0",
+        "symfony/cache": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+        "symfony/config": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+        "symfony/console": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+        "symfony/framework-bundle": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^5.4 || ^6.4 || ^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "nyholm/psr7": "^1.8.2",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^9.6 || ^10.5 || ^11.5 || ^12.0",
+        "symfony/http-client": "^5.4 || ^6.4 || ^7.0 || ^8.0"
+    },
+    "suggest": {
+        "symfony/http-client": "Provides the PSR-18 client the bundle uses by default (together with nyholm/psr7)",
+        "nyholm/psr7": "PSR-17 factories for symfony/http-client"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bannerstop\\MentionApiClientBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bannerstop\\MentionApiClientBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
