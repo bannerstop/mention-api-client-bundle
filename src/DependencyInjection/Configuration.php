@@ -33,6 +33,18 @@ final class Configuration implements ConfigurationInterface
                 ->scalarNode('http_client')->defaultNull()->info('Service id of a PSR-18 client; defaults to the Symfony HTTP client ("http_client")')->end()
                 ->scalarNode('request_factory')->defaultNull()->info('Service id of a PSR-17 request factory; defaults to the HTTP client if it is one, else nyholm/psr7')->end()
                 ->scalarNode('stream_factory')->defaultNull()->info('Service id of a PSR-17 stream factory; same default as request_factory')->end()
+            ->end()
+            ->validate()
+                ->ifTrue(static function (array $config): bool {
+                    return null === $config['api_key'] && [] === ($config['client_credentials'] ?? []);
+                })
+                ->thenInvalid('Configure api_key or client_credentials: mention-api needs a credential.')
+            ->end()
+            ->validate()
+                ->ifTrue(static function (array $config): bool {
+                    return null !== $config['api_key'] && [] !== ($config['client_credentials'] ?? []);
+                })
+                ->thenInvalid('Configure either api_key or client_credentials, not both.')
             ->end();
 
         return $treeBuilder;
