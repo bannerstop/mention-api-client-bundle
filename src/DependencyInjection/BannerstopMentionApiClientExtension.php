@@ -6,6 +6,7 @@ namespace Bannerstop\MentionApiClientBundle\DependencyInjection;
 
 use Bannerstop\MentionApi\MentionApiClient;
 use Bannerstop\MentionApi\MentionApiConfig;
+use Bannerstop\MentionApiClientBundle\Command\GenerateCommand;
 use Bannerstop\MentionApiClientBundle\Config\ConfigFactory;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -54,6 +55,15 @@ final class BannerstopMentionApiClientExtension extends Extension
                 new Reference(self::CACHE, ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->setPublic(true);
+
+        $container->register('bannerstop_mention_api_client.generate_command', GenerateCommand::class)
+            ->setArguments([
+                new Reference(MentionApiClient::class),
+                '%kernel.project_dir%',
+                $config['generator']['namespace'],
+                $config['generator']['directory'],
+            ])
+            ->addTag('console.command', ['command' => GenerateCommand::NAME, 'description' => 'Generates typed wrappers for the Queries and Routines of your mention-api Consumer']);
     }
 
     /**

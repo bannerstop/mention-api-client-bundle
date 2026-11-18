@@ -30,6 +30,22 @@ final class FakeMentionApi
         return $this;
     }
 
+    public function enqueueProblem(int $status, string $code, string $requestId): self
+    {
+        $this->responses[] = new MockResponse(json_encode([
+            'type' => 'urn:bannerstop:mention-api:problem:' . $code,
+            'title' => 'Problem',
+            'status' => $status,
+            'detail' => 'Something is wrong.',
+            'request_id' => $requestId,
+        ], JSON_THROW_ON_ERROR), [
+            'http_code' => $status,
+            'response_headers' => ['Content-Type: application/problem+json', 'X-Request-Id: ' . $requestId],
+        ]);
+
+        return $this;
+    }
+
     /**
      * @param list<array<string, mixed>> $rows
      */
