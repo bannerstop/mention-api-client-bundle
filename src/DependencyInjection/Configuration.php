@@ -18,6 +18,7 @@ final class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->scalarNode('base_url')->isRequired()->cannotBeEmpty()->info('Base URL of mention-api without /v2, e.g. https://mention-api.example.com')->end()
+                ->floatNode('timeout')->defaultValue(MentionApiConfig::DEFAULT_TIMEOUT)->info('Seconds to wait for an answer, also for the whole call with the default HTTP client')->end()
                 ->scalarNode('api_key')->defaultNull()->info('The API key of your Consumer; use this or client_credentials')->end()
                 ->arrayNode('client_credentials')
                     ->info('Authenticate as a Keycloak client with a service account; use this or api_key')
@@ -28,6 +29,7 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('scope')->defaultValue(MentionApiConfig::DEFAULT_SCOPE)->cannotBeEmpty()->end()
                     ->end()
                 ->end()
+                ->scalarNode('cache')->defaultValue('cache.app')->info('Service id of a PSR-16 or PSR-6 cache that keeps the access token of client_credentials, null to disable')->end()
                 ->scalarNode('http_client')->defaultNull()->info('Service id of a PSR-18 client; defaults to the Symfony HTTP client ("http_client")')->end()
                 ->scalarNode('request_factory')->defaultNull()->info('Service id of a PSR-17 request factory; defaults to the HTTP client if it is one, else nyholm/psr7')->end()
                 ->scalarNode('stream_factory')->defaultNull()->info('Service id of a PSR-17 stream factory; same default as request_factory')->end()

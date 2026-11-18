@@ -16,12 +16,22 @@ final class ConfigFactory
     /**
      * @param array{token_url?: string, client_id?: string, client_secret?: string, scope?: string} $clientCredentials
      */
-    public static function create(string $baseUrl, ?string $apiKey, array $clientCredentials): MentionApiConfig
+    public static function create(string $baseUrl, float $timeout, ?string $apiKey, array $clientCredentials): MentionApiConfig
     {
         if (null !== $apiKey) {
-            return MentionApiConfig::forApiKey($baseUrl, $apiKey);
+            $config = MentionApiConfig::forApiKey($baseUrl, $apiKey);
+        } else {
+            $config = self::clientCredentials($baseUrl, $clientCredentials);
         }
 
+        return $config->withTimeout($timeout);
+    }
+
+    /**
+     * @param array{token_url?: string, client_id?: string, client_secret?: string, scope?: string} $clientCredentials
+     */
+    private static function clientCredentials(string $baseUrl, array $clientCredentials): MentionApiConfig
+    {
         return MentionApiConfig::forClientCredentials(
             $baseUrl,
             (string) ($clientCredentials['token_url'] ?? ''),

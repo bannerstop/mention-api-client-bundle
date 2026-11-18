@@ -34,11 +34,14 @@ final class BannerstopMentionApiClientExtension extends Extension
             'http_client' => $config['http_client'],
             'request_factory' => $config['request_factory'],
             'stream_factory' => $config['stream_factory'],
+            'cache' => $config['cache'],
         ]);
+
+        $container->setParameter('bannerstop_mention_api_client.timeout', $config['timeout']);
 
         $container->register(self::CONFIG, MentionApiConfig::class)
             ->setFactory([ConfigFactory::class, 'create'])
-            ->setArguments([$config['base_url'], $config['api_key'], $config['client_credentials'] ?? []]);
+            ->setArguments([$config['base_url'], '%bannerstop_mention_api_client.timeout%', $config['api_key'], $config['client_credentials'] ?? []]);
 
         $container->register(MentionApiClient::class, MentionApiClient::class)
             ->setArguments([
