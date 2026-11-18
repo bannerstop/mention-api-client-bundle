@@ -63,7 +63,7 @@ final class BannerstopMentionApiClientExtension extends Extension
                 $config['generator']['namespace'],
                 $config['generator']['directory'],
             ])
-            ->addTag('console.command', ['command' => GenerateCommand::NAME, 'description' => 'Generates typed wrappers for the Queries and Routines of your mention-api Consumer']);
+            ->addTag('console.command', ['command' => GenerateCommand::NAME, 'description' => GenerateCommand::DESCRIPTION]);
     }
 
     /**

@@ -21,6 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class GenerateCommand extends Command
 {
     public const NAME = 'mention-api:generate';
+    public const DESCRIPTION = 'Generates typed wrappers for the Queries and Routines of your mention-api Consumer';
 
     /** @var MentionApiClient */
     private $client;
@@ -43,7 +44,7 @@ final class GenerateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Generates typed wrappers for the Queries and Routines of your mention-api Consumer')
+            ->setDescription(self::DESCRIPTION)
             ->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'PHP namespace of the generated classes (default: generator.namespace of the bundle configuration)')
             ->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Directory to write them to, relative to the project directory (default: generator.directory)')
             ->addOption('check', null, InputOption::VALUE_NONE, 'Write nothing; exit with status 1 when the files differ from what would be generated')

@@ -129,7 +129,7 @@ bannerstop_mention_api_client:
 
 ## Usage
 
-Inject `Bannerstop\MentionApi\MentionApiClient`:
+Inject `Bannerstop\MentionApi\MentionApiClient` (the examples use constructor property promotion, PHP 8.0 or later; the bundle itself runs on PHP 7.4):
 
 ```php
 use Bannerstop\MentionApi\MentionApiClient;
