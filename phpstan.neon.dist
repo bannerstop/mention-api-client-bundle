@@ -1,4 +1,17 @@
 parameters:
     level: 8
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # The bundle supports several Symfony versions, so version checks and builder return types differ per run.
+        -
+            identifiers: [greaterOrEqual.alwaysTrue, greaterOrEqual.alwaysFalse, booleanOr.alwaysTrue]
+            path: src/DependencyInjection/Compiler/PsrDefaultsPass.php
+        -
+            identifier: method.nonObject
+            path: src/DependencyInjection/Configuration.php
     paths:
         - src
+    excludePaths:
+        # Uses PHP 8 syntax, because it only runs next to psr/simple-cache 3 (PHP 8.0 and later).
+        - src/Cache/Psr6Psr16Cache.php

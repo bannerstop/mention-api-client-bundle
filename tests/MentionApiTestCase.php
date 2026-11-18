@@ -17,9 +17,15 @@ abstract class MentionApiTestCase extends TestCase
     private $kernel;
     /** @var string */
     protected $projectDir;
+    /** @var callable|null */
+    private $exceptionHandler;
+    /** @var callable|null */
+    private $errorHandler;
 
     protected function setUp(): void
     {
+        $this->exceptionHandler = self::currentExceptionHandler();
+        $this->errorHandler = self::currentErrorHandler();
         $this->projectDir = sys_get_temp_dir() . '/mention-api-client-bundle-' . getmypid() . '-' . bin2hex(random_bytes(4));
         mkdir($this->projectDir);
     }
@@ -29,6 +35,13 @@ abstract class MentionApiTestCase extends TestCase
         if (null !== $this->kernel) {
             $this->kernel->shutdown();
             $this->kernel = null;
+        }
+        // Symfony 5.4 registers its error handler when a kernel boots and never removes it.
+        for ($i = 0; $i < 10 && self::currentExceptionHandler() !== $this->exceptionHandler; ++$i) {
+            restore_exception_handler();
+        }
+        for ($i = 0; $i < 10 && self::currentErrorHandler() !== $this->errorHandler; ++$i) {
+            restore_error_handler();
         }
         $this->remove($this->projectDir);
     }
@@ -97,6 +110,24 @@ abstract class MentionApiTestCase extends TestCase
         \assert($fake instanceof FakeMentionApi);
 
         return $fake;
+    }
+
+    private static function currentExceptionHandler(): ?callable
+    {
+        $handler = set_exception_handler(null);
+        restore_exception_handler();
+
+        return $handler;
+    }
+
+    private static function currentErrorHandler(): ?callable
+    {
+        $handler = set_error_handler(static function (): bool {
+            return false;
+        });
+        restore_error_handler();
+
+        return $handler;
     }
 
     private function remove(string $path): void

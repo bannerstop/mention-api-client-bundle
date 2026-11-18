@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bannerstop\MentionApiClientBundle\DependencyInjection\Compiler;
 
+use Bannerstop\MentionApiClientBundle\Cache\Psr6Psr16Cache;
 use Bannerstop\MentionApiClientBundle\DependencyInjection\BannerstopMentionApiClientExtension;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\Psr18Client;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -71,10 +73,21 @@ final class PsrDefaultsPass implements CompilerPassInterface
         if (null !== $class && is_subclass_of($class, CacheInterface::class)) {
             $container->setAlias(BannerstopMentionApiClientExtension::CACHE, $cache);
         } elseif (null !== $class && is_subclass_of($class, CacheItemPoolInterface::class)) {
-            $container->register(BannerstopMentionApiClientExtension::CACHE, Psr16Cache::class)->setArguments([new Reference($cache)]);
+            $adapter = $this->symfonyPsr16CacheWorks() ? Psr16Cache::class : Psr6Psr16Cache::class;
+            $container->register(BannerstopMentionApiClientExtension::CACHE, $adapter)->setArguments([new Reference($cache)]);
         } else {
             throw new LogicException(sprintf('bannerstop_mention_api_client.cache must be a PSR-16 or PSR-6 cache, but the service "%s" is neither.', $cache));
         }
+    }
+
+    /**
+     * Symfony's Psr16Cache before 6.0 refuses to load next to psr/simple-cache 3, whose methods have return types.
+     */
+    private function symfonyPsr16CacheWorks(): bool
+    {
+        $simpleCacheHasReturnTypes = (new \ReflectionMethod(CacheInterface::class, 'get'))->hasReturnType();
+
+        return !$simpleCacheHasReturnTypes || Kernel::VERSION_ID >= 60000;
     }
 
     private function serviceClass(ContainerBuilder $container, string $id): ?string

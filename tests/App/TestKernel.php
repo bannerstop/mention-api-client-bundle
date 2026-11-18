@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 /**
  * A small application with the bundle, whose Symfony HTTP client is answered by FakeMentionApi
@@ -30,7 +31,7 @@ final class TestKernel extends Kernel
     {
         $this->bundleConfig = $bundleConfig;
         $this->projectDir = $projectDir;
-        parent::__construct('test', true);
+        parent::__construct('test', false);
     }
 
     public function registerBundles(): iterable
@@ -81,7 +82,7 @@ final class TestKernel extends Kernel
      */
     private static function frameworkDefaults(): array
     {
-        if (self::VERSION_ID >= 70300 && self::VERSION_ID < 80000) {
+        if (self::VERSION_ID >= 70300 && self::VERSION_ID < 80000 && class_exists(PropertyInfoExtractor::class)) {
             return ['property_info' => ['with_constructor_extractor' => true]];
         }
         if (self::VERSION_ID >= 60000 && self::VERSION_ID < 70000) {
