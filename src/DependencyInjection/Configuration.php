@@ -23,7 +23,7 @@ final class Configuration implements ConfigurationInterface
                 ->floatNode('timeout')->defaultValue(MentionApiConfig::DEFAULT_TIMEOUT)->info('Seconds to wait for an answer, also for the whole call with the default HTTP client')->end()
                 ->scalarNode('api_key')->defaultNull()->info('The API key of your Consumer; use this or client_credentials')->end()
                 ->arrayNode('client_credentials')
-                    ->info('Authenticate as a Keycloak client with a service account; use this or api_key')
+                    ->info('Authenticate with the OAuth 2.0 client-credentials grant; use this or api_key')
                     ->children()
                         ->scalarNode('token_url')->isRequired()->cannotBeEmpty()->info('e.g. https://sso.example.com/realms/example/protocol/openid-connect/token')->end()
                         ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()

@@ -3,7 +3,7 @@
 Symfony integration of [bannerstop/mention-api-client](https://github.com/bannerstop/mention-api-client),
 the PHP client for the `/v2` interface of mention-api. The bundle gives you:
 
-- **Configuration** of the base URL, the credential (API key or Keycloak client credentials),
+- **Configuration** of the base URL, the credential (API key or OAuth 2.0 client credentials),
   the cache pool for the access token and the timeout
 - **An autowirable `MentionApiClient`** to run Queries and Routines
 - **The generator for typed wrappers as a console command**, `mention-api:generate`
@@ -57,10 +57,11 @@ bannerstop_mention_api_client:
     api_key: '%env(MENTION_API_KEY)%'
 ```
 
-### Keycloak client credentials
+### OAuth 2.0 client credentials
 
-The Keycloak client needs service accounts enabled and the client scope `mention-api`. The client fetches the access
-token itself and keeps it in the cache until shortly before it expires.
+Any OAuth 2.0 server that issues tokens mention-api accepts will do; pass its token endpoint (the example below is the
+shape Keycloak uses). The client must be allowed the client-credentials grant and the scope `mention-api`. The client
+fetches the access token itself and keeps it in the cache until shortly before it expires.
 
 ```yaml
 bannerstop_mention_api_client:
@@ -82,7 +83,7 @@ without a cache that every process can reach, each PHP process fetches its own t
 bannerstop_mention_api_client:
     base_url: 'https://mention-api.example.com'  # required, http(s), without /v2
     api_key: null                                # the API key of your Consumer
-    client_credentials:                          # or: Keycloak client credentials
+    client_credentials:                          # or: OAuth 2.0 client credentials
         token_url: ~                             # required in this block
         client_id: ~                             # required in this block
         client_secret: ~                         # required in this block
